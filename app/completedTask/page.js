@@ -1,6 +1,6 @@
-import Link from "next/link";
-import Delete from "./delete";
-const Table = (props) => {
+import React from "react";
+
+function CompletedTask() {
   return (
     <div className="overflow-x-auto   w-screen h- flex justify-center mt-11">
       <table className="table">
@@ -17,7 +17,7 @@ const Table = (props) => {
         </thead>
 
         <tbody>
-          {props.data.map((todolist) => (
+          {/* {props.data.map((todolist) => (
             <tr key={todolist._id}>
               <th>
                 <label>
@@ -36,19 +36,12 @@ const Table = (props) => {
                   {todolist.task}
                 </span>
               </td>
-              <th>
-                <Link href={`/editTopic/${todolist._id}`}>
-                  <button className="border p-1 bg-blue-700 text-sm mr-2  rounded px-3">
-                    Edit
-                  </button>
-                </Link>
-                <Delete id={todolist._id} />
-              </th>
             </tr>
-          ))}
+          ))} */}
         </tbody>
       </table>
     </div>
   );
-};
-export default Table;
+}
+
+export default CompletedTask;

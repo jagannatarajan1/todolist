@@ -1,12 +1,37 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { Fragment, useState } from "react";
+import { Fragment, useState, useEffect } from "react";
 
-export default function Form() {
+const EditTopic = ({ params }) => {
   const [task, setTask] = useState("");
-  const [status, setstatus] = useState(""); // Include status state
-  const incomplete = "incomplete";
+  const [status, setstatus] = useState("");
   const route = useRouter();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch(`http://localhost:3000/api/${params.edit}`, {
+          cache: "no-store",
+        });
+
+        if (!res.ok) {
+          throw new Error("Failed to fetch topic");
+        }
+
+        const data = await res.json();
+
+        if (res.ok) {
+          console.log(data);
+          setTask(data.todolist.task);
+          setstatus(data.todolist.status);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, [params.edit]);
 
   const addTaskHandler = (event) => {
     setTask(event.target.value);
@@ -14,27 +39,21 @@ export default function Form() {
 
   const formHandler = async (e) => {
     e.preventDefault();
-    if (task) {
-      setstatus(incomplete);
-    }
-
     try {
-      const res = await fetch("http://localhost:3000/api", {
-        method: "POST",
+      const res = await fetch(`http://localhost:3000/api/${params.edit}`, {
+        method: "PUT", // Assuming you're using PUT method to update task
         headers: {
-          "Content-type": "application/json",
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ task, status }), // Include status in the request body
+        body: JSON.stringify({ task, status }), // Send updated task data
       });
 
       if (res.ok) {
+        console.log("Task updated successfully");
         route.refresh();
-        setTask("");
-        setstatus("");
         route.push("/Today");
-        console.log("posted successfully");
       } else {
-        throw new Error("Failed to create a topic");
+        throw new Error("Failed to update task");
       }
     } catch (error) {
       console.log(error);
@@ -60,10 +79,12 @@ export default function Form() {
             className="border border-white-600 bg-red-500 rounded ml-4 p-1"
             onClick={formHandler}
           >
-            Add Task
+            Update Task
           </button>
         </form>
       </div>
     </Fragment>
   );
-}
+};
+
+export default EditTopic;

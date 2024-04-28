@@ -15,6 +15,13 @@ export async function POST(request) {
 
 export async function GET() {
   await connectMongoDB();
-  const allTask = await Todolistlast.find();
+  const allTask = await todolistfinal.find();
   return NextResponse.json({ allTask });
+}
+
+export async function DELETE(request) {
+  const id = request.nextUrl.searchParams.get("id");
+  await connectMongoDB();
+  await todolistfinal.findByIdAndDelete(id);
+  return NextResponse.json({ message: "Topic deleted" }, { status: 200 });
 }
