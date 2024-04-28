@@ -1,17 +1,16 @@
-import Todolistlast from "@/(modal)/page";
+import todolistfinal from "@/(models)/skeleton";
 import { connectMongoDB } from "@/utils/mongoDB";
 import { NextResponse } from "next/server";
 
-export async function POST(req) {
-  try {
-    const body = await req.json();
-    await connectMongoDB();
-    const TodolistData = body.todoData;
-    await Todolistlast.create(TodolistData);
-    return NextResponse.json({ message: "success", TodolistData });
-  } catch (error) {
-    return NextResponse.json({ message: "Error", error }, { status: 500 });
-  }
+export async function POST(request) {
+  const { task, status } = await request.json();
+  await connectMongoDB();
+  await todolistfinal.create({ task, status });
+  console.log(task, status);
+  return NextResponse.json(
+    { message: "Todolistlast Created" },
+    { status: 201 }
+  );
 }
 
 export async function GET() {

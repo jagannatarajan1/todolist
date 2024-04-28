@@ -3,6 +3,8 @@ import { Fragment, useState } from "react";
 
 export default function Form() {
   const [task, setTask] = useState("");
+  const [status, setstatus] = useState(""); // Include status state
+  const incomplete = "incomplete";
 
   const addTaskHandler = (event) => {
     setTask(event.target.value);
@@ -10,20 +12,27 @@ export default function Form() {
 
   const formHandler = async (e) => {
     e.preventDefault();
-    const todoData = {
-      task: task,
-    };
+    if (task) {
+      setstatus(incomplete);
+      console.log("kakak");
+    }
 
-    const res = await fetch("/api", {
-      method: "POST",
-      body: JSON.stringify({ todoData }),
-      "content-type": "application/json",
-    });
-    if (res.ok) {
-      console.log("posted successfully");
-      setTask("");
-    } else {
-      console.log("error while posting");
+    try {
+      const res = await fetch("http://localhost:3000/api", {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({ task, status }), // Include status in the request body
+      });
+
+      if (res.ok) {
+        // router.push("/");W
+      } else {
+        throw new Error("Failed to create a topic");
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
