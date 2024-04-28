@@ -10,14 +10,11 @@ export default function Form() {
 
   const addTaskHandler = (event) => {
     setTask(event.target.value);
+    setstatus(incomplete);
   };
 
   const formHandler = async (e) => {
     e.preventDefault();
-    if (task) {
-      setstatus(incomplete);
-    }
-
     try {
       const res = await fetch("http://localhost:3000/api", {
         method: "POST",

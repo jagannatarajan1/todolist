@@ -7,8 +7,11 @@ const Today = async () => {
     throw new Error("Fetching the data was unsuccessful ");
   }
   const fetchdata = await response.json();
-  console.log(fetchdata);
 
-  return <Table data={fetchdata.allTask} />;
+  const incomplete = fetchdata.allTask.filter((data) => {
+    return data.status == "incomplete";
+  });
+
+  return <Table data={incomplete} />;
 };
 export default Today;
